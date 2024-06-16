@@ -1,7 +1,10 @@
+import os
+
 import numpy as np
 from django.core.management.base import BaseCommand
 import pandas as pd
 
+from api_hack import settings
 from coordinates.models import House
 
 
@@ -29,7 +32,7 @@ class Command(BaseCommand):
             return np.nan
 
     def handle(self, *args, **kwargs):
-        file_path = r'C:\Users\Степан\Documents\хакатон\data\data_coordonates_and_description.xlsx'
+        file_path = os.path.join(settings.BASE_DIR, r'data\data_coordonates_and_description.xlsx')
         self.import_houses_from_excel(file_path)
 
     def import_houses_from_excel(self, file_path):
@@ -45,6 +48,7 @@ class Command(BaseCommand):
                 municipal_district=row['Муниципальный округ, поселение'],
                 house_number=row['Номер дома, владения, участка'],
                 street=row['Наименование элемента планировочной структуры или улично-дорожной сети'],
-                unom=row['UNOM']
+                unom=row['UNOM'],
+                unom_houses=row['unom_houses']
             )
         self.stdout.write(self.style.SUCCESS('Successfully imported houses'))

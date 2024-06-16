@@ -1,6 +1,9 @@
+import os
+
 from django.core.management.base import BaseCommand
 import pandas as pd
 
+from api_hack import settings
 from coordinates.models import DataModel, House
 
 
@@ -8,7 +11,7 @@ class Command(BaseCommand):
     help = 'Import houses from an Excel file'
 
     def handle(self, *args, **kwargs):
-        file_path = r'C:\Users\Степан\Documents\хакатон\data_Alex\result.xlsx'
+        file_path = os.path.join(settings.BASE_DIR, r'data\result.xlsx')
         self.import_houses_from_excel(file_path)
 
     def import_houses_from_excel(self, file_path):
@@ -23,6 +26,10 @@ class Command(BaseCommand):
                     material=row['material'],
                     purpose=row['purpose'],
                     house_class=row['class'],
+                    event_cnt_cat=row['event_cnt_cat'],
+                    floor_num=row['floor_num'],
+                    flat_num=row['flat_num'],
+                    square=row['square']
                 )
                 self.stdout.write(self.style.SUCCESS(f'Successfully imported data model for unom {unom_value}'))
             except House.DoesNotExist:

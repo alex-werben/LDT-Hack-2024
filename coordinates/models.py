@@ -10,7 +10,7 @@ class House(models.Model):
     house_number = models.CharField(max_length=10)
     street = models.CharField(max_length=128)
     unom = models.IntegerField(unique=True)
-
+    unom_houses = models.TextField()
 
     def __str__(self):
         return self.address
@@ -22,6 +22,12 @@ class DataModel(models.Model):
     material = models.IntegerField()
     purpose = models.IntegerField()
     house_class = models.IntegerField()
+    event_cnt_cat = models.FloatField()
+    floor_num = models.FloatField()
+    flat_num = models.FloatField()
+    square = models.FloatField()
 
-# class DataTemperature(models.Model):
 
+class DataTemperature(models.Model):
+    material = models.CharField(max_length=128)
+    unom = models.ForeignKey(House, on_delete=models.CASCADE, to_field='unom')

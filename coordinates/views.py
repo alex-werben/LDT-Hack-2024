@@ -14,6 +14,7 @@ from .pagination import CustomLimitOffsetPagination
 from .serializers import HouseSerializer, StreetSerializer, TempForecastSerializer, PredictionSerializer, \
     PrioritySerializer
 from rest_framework import status
+from rest_framework.views import APIView
 
 
 class HouseListCreateView(generics.ListAPIView):
@@ -84,6 +85,10 @@ class PredictionListView(generics.ListAPIView):
             'material': [instance.material],
             'purpose': [instance.purpose],
             'class': [instance.house_class],
+            'event_cnt_cat': [instance.event_cnt_cat],
+            'floor_num': [instance.floor_num],
+            'flat_num': [instance.flat_num],
+            'square': [instance.square]
         })
         pickle_files = self.get_file_list(os.path.join(settings.BASE_DIR, 'coordinates/pickle'))
         for pickle_file in pickle_files:
@@ -104,34 +109,53 @@ class PredictionListView(generics.ListAPIView):
         return Response(serializer.data)
 
 
-class PriorityListAPIView(generics.ListAPIView):
+# class PriorityListAPIView(generics.ListAPIView):
+#     serializer_class = PrioritySerializer
+#
+#     @staticmethod
+#     def get_priority(unom_list):
+#         df = pd.read_csv(os.path.join(settings.BASE_DIR, r"data\merged_priority_data.csv"))
+#         filtered_df = df[df['UNOM'].isin(unom_list)]
+#         unom_type_dict = dict(zip(filtered_df['UNOM'], filtered_df['Тип Назначение']))
+#         return [{'unom': k, 'priority': v} for k, v in unom_type_dict.items()]
+#
+#     def get_queryset(self):
+#         unoms = self.kwargs['unoms']
+#         try:
+#             unom_list = json.loads(unoms)
+#             if not isinstance(unom_list, list):
+#                 raise ValueError
+#         except (json.JSONDecodeError, ValueError):
+#             return Response({'error': 'Invalid unom list format'}, status=status.HTTP_400_BAD_REQUEST)
+#         print('unoms', unoms)
+#         results = self.get_priority(unom_list)
+#         return results
+#
+#     def list(self, request, *args, **kwargs):
+#         queryset = self.get_queryset()
+#         print('queryset', queryset)
+#         if isinstance(queryset, Response):
+#             return queryset
+#         serializer = self.get_serializer(queryset, many=True)
+#         return Response(serializer.data)
+
+class PriorityListAPIView(APIView):
     serializer_class = PrioritySerializer
 
     @staticmethod
     def get_priority(unom_list):
-        df = pd.read_csv(r'C:\Users\Степан\Documents\хакатон\data\merged_priority_data.csv')
+        unom_list = [int(item) for item in unom_list]
+        df = pd.read_csv(os.path.join(settings.BASE_DIR, r"data\merged_priority_data.csv"))
         filtered_df = df[df['UNOM'].isin(unom_list)]
         unom_type_dict = dict(zip(filtered_df['UNOM'], filtered_df['Тип Назначение']))
         return [{'unom': k, 'priority': v} for k, v in unom_type_dict.items()]
 
-    def get_queryset(self):
-        unoms = self.kwargs['unoms']
-        try:
-            unom_list = json.loads(unoms)
-            if not isinstance(unom_list, list):
-                raise ValueError
-        except (json.JSONDecodeError, ValueError):
-            return Response({'error': 'Invalid unom list format'}, status=status.HTTP_400_BAD_REQUEST)
-        print('unoms', unoms)
+    def get(self, request, *args, **kwargs):
+        unom_list = request.query_params.getlist('unom')
+        if not unom_list:
+            return Response({'error': 'No unom parameters provided'}, status=status.HTTP_400_BAD_REQUEST)
         results = self.get_priority(unom_list)
-        return results
-
-    def list(self, request, *args, **kwargs):
-        queryset = self.get_queryset()
-        print('queryset', queryset)
-        if isinstance(queryset, Response):
-            return queryset
-        serializer = self.get_serializer(queryset, many=True)
+        serializer = self.serializer_class(results, many=True)
         return Response(serializer.data)
 
 

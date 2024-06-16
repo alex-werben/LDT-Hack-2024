@@ -1,3 +1,5 @@
+import os
+
 import numpy as np
 import openmeteo_requests
 
@@ -6,6 +8,8 @@ import pandas as pd
 from retry_requests import retry
 from datetime import timedelta
 from datetime import datetime
+
+from api_hack import settings
 
 materials_properties = {  # справочник с характеристиками стен
     "кирпичные": {
@@ -264,7 +268,7 @@ def get_wall_materials(i_unom):  # получение материалов ст�
                 ]
     bti_use_cols = 'L,N:R,T'
 
-    bti = pd.read_excel(r'C:\Users\Степан\Documents\хакатон\data\9. Выгрузка БТИ.xlsx',
+    bti = pd.read_excel(os.path.join(settings.BASE_DIR, r'data\9. Выгрузка БТИ.xlsx'),
                         names=bti_cols,
                         index_col=None,
                         usecols=bti_use_cols,
@@ -331,5 +335,3 @@ def cooling_time_by_unom(i_unom_x_wals, i_weather):
                    'full_cooling_down': full_cooling_down}
     return o_cool_time
 
-
-# print(cooling_time_for_unoms([51067, 6063652]))

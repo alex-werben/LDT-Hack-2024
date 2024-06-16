@@ -7,6 +7,7 @@ urlpatterns = [
     path('streets/', StreetListView.as_view(), name='street-list'),
     path('forecast/', ForecastListAPIView.as_view(), name='forecast'),
     path('predictions/', PredictionListView.as_view(), name='predictions-list'),
-    path('priority/<str:unoms>/', PriorityListAPIView.as_view(), name='unom-list'),
+    # path('priority/<str:unoms>/', PriorityListAPIView.as_view(), name='unom-list'),
+    path('priority/', PriorityListAPIView.as_view(), name='unom-list'),
     path('houses_list/<str:unom_list>/', HouseListView.as_view(), name='house-list'),
 ]
