@@ -1,0 +1,13 @@
+.object-info {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+
+    &__title {
+        margin: 0;
+    }
+
+    &__property {
+        margin: 0;
+    }
+}
