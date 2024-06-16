@@ -9,7 +9,19 @@ class House(models.Model):
     municipal_district = models.CharField(max_length=128)
     house_number = models.CharField(max_length=10)
     street = models.CharField(max_length=128)
-    unom = models.IntegerField()
+    unom = models.IntegerField(unique=True)
+
 
     def __str__(self):
         return self.address
+
+
+class DataModel(models.Model):
+    unom = models.ForeignKey(House, on_delete=models.CASCADE, to_field='unom')
+    district = models.IntegerField()
+    material = models.IntegerField()
+    purpose = models.IntegerField()
+    house_class = models.IntegerField()
+
+# class DataTemperature(models.Model):
+

@@ -20,7 +20,7 @@ class Command(BaseCommand):
             end = string.find(']]]', start) + 3
             result_str = string[start:end] + '}'
             list_coordinates = eval(result_str)['coordinates']
-            return [[lat, lon] for lon, lat in list_coordinates[0]]
+            return list_coordinates[0]
         except AttributeError:
             print(string)
             return np.nan
