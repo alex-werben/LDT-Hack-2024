@@ -1,0 +1,31 @@
+.filters {
+    display: flex;
+    flex-direction: column;
+
+    &__title {
+        margin: 0 0 24px 0;
+    }
+
+    &__list {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    &__list-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    &__select {
+        margin: 0;
+        flex-grow: 1;
+    }
+
+    &__submit-button {
+        margin: 0;
+        align-self: flex-end;
+        margin-top: 16px;
+    }
+}
