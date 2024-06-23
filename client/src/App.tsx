@@ -77,12 +77,6 @@ function App() {
                     };
                 })
             );
-
-            const affectedPolygons = polygons.filter((polygon) =>
-                priorities.some((priority) => priority.unom === polygon.unom)
-            );
-
-            console.log(affectedPolygons);
         },
         [polygons]
     );

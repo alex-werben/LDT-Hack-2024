@@ -1,7 +1,4 @@
 import qs from 'query-string';
-import polygons from '../../polygons.json';
-import forecast from '../../forecast.json';
-import priority from '../../priority.json';
 import {
     IPolygon,
     IPolygonRaw,
@@ -13,17 +10,18 @@ import { api } from '.';
 
 export class PolygonsModel {
     static async getPolygons(): Promise<IPolygon[]> {
-        const { data } = await api.get('/houses');
+        const { data } = await api.get(
+            '/houses?municipal_district=муниципальный%20округ%20Измайлово'
+        );
 
-        console.log(data);
-
-        const rawData: IPolygonRaw[] = polygons.results.map((item) => ({
+        const rawData = data.results.map((item: IPolygonRaw) => ({
             ...item,
             coordinates: JSON.parse(item.coordinates),
-            unom_houses: JSON.parse(item.unom_houses),
+            unom_houses:
+                item.unom_houses === 'nan' ? [] : JSON.parse(item.unom_houses),
         }));
 
-        const result: IPolygon[] = rawData.map((item) => ({
+        const result: IPolygon[] = rawData.map((item: IPolygonRaw) => ({
             ...item,
             administrativeDistrict: item.administrative_district,
             houseNumber: item.house_number,
@@ -32,12 +30,17 @@ export class PolygonsModel {
             unomHouses: item.unom_houses,
         }));
 
-        return Promise.resolve(result);
+        return result;
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    static getPrediction(_unom: IPolygon['unom']): Promise<IPrediction> {
-        const rawData = forecast[0] as IPredictionRaw;
+    static async getPrediction(unom: IPolygon['unom']): Promise<IPrediction> {
+        const { data } = await api.get<IPredictionRaw[]>('/forecast', {
+            params: { ids: unom },
+        });
+
+        console.log(data);
+
+        const rawData = data[0];
 
         const result: IPrediction = {
             ...rawData,
@@ -46,19 +49,17 @@ export class PolygonsModel {
             tempForecast: rawData.temp_forecast,
         };
 
-        return new Promise((resolve) => {
-            setTimeout(() => {
-                resolve(result);
-            }, 500);
-        });
+        return result;
     }
 
-    static getPriorities(ids: IPolygon['unom'][]): Promise<IPriority[]> {
-        // @ts-ignore
-        const _params = qs.stringify({ unom: ids });
+    static async getPriorities(ids: IPolygon['unom'][]): Promise<IPriority[]> {
+        const { data } = await api.get<IPriority[]>('/priority', {
+            params: { unom: ids },
+            paramsSerializer: (params) => {
+                return qs.stringify(params, { arrayFormat: 'none' });
+            },
+        });
 
-        const priorities = priority;
-
-        return Promise.resolve(priorities);
+        return data;
     }
 }

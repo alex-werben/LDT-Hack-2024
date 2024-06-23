@@ -16,10 +16,12 @@ export const Prediction: FC<IPredictionProps> = (props) => {
 
     const getPrediction = useCallback(async (unom: IPolygon['unom']) => {
         const result = await PolygonsModel.getPrediction(unom);
+
         setPrediction(result);
     }, []);
 
     useEffect(() => {
+        setPrediction(undefined);
         getPrediction(activeObject.unom);
     }, [activeObject, getPrediction]);
 

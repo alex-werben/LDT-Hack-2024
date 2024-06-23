@@ -14,27 +14,27 @@ export interface IMarker {
 export interface IPolygonRaw {
     id: number;
     address: string;
-    coordinates: LngLat[];
+    coordinates: string;
     type_object: string;
     administrative_district: string;
     municipal_district: string;
     house_number: string;
     street: string;
     unom: number;
-    unom_houses: IPolygonRaw['unom'][];
+    unom_houses: string;
 }
 
 export interface IPolygon {
     id: IPolygonRaw['id'];
     address: IPolygonRaw['address'];
-    coordinates: IPolygonRaw['coordinates'];
+    coordinates: LngLat[];
     typeObject: IPolygonRaw['type_object'];
     administrativeDistrict: IPolygonRaw['administrative_district'];
     municipalDistrict: IPolygonRaw['municipal_district'];
     houseNumber: IPolygonRaw['house_number'];
     street: IPolygonRaw['street'];
     unom: IPolygonRaw['unom'];
-    unomHouses: IPolygonRaw['unom_houses'];
+    unomHouses: IPolygonRaw['unom'][];
     color?: string;
 }
 
