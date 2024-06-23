@@ -92,7 +92,7 @@ class PredictionListView(generics.ListAPIView):
         })
         pickle_files = self.get_file_list(os.path.join(settings.BASE_DIR, 'coordinates', 'pickle'))
         for pickle_file in pickle_files:
-            with open(os.path.join(settings.BASE_DIR, f'coordinates/pickle/{pickle_file}'), 'rb') as file:
+            with open(os.path.join(settings.BASE_DIR, 'coordinates', 'pickle', pickle_file), 'rb') as file:
                 model = pickle.load(file)
                 predict = list(
                     model.predict_proba(df)[:, 1])
