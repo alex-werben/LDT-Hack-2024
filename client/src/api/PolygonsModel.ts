@@ -9,9 +9,14 @@ import {
     IPredictionRaw,
     IPriority,
 } from '../const';
+import { api } from '.';
 
 export class PolygonsModel {
-    static getPolygons(): Promise<IPolygon[]> {
+    static async getPolygons(): Promise<IPolygon[]> {
+        const { data } = await api.get('/houses');
+
+        console.log(data);
+
         const rawData: IPolygonRaw[] = polygons.results.map((item) => ({
             ...item,
             coordinates: JSON.parse(item.coordinates),
