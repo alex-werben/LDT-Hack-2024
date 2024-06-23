@@ -268,7 +268,7 @@ def get_wall_materials(i_unom):  # получение материалов ст�
                 ]
     bti_use_cols = 'L,N:R,T'
 
-    bti = pd.read_excel(os.path.join(settings.BASE_DIR, r'data\9. Выгрузка БТИ.xlsx'),
+    bti = pd.read_excel(os.path.join(settings.BASE_DIR, 'data', '9. Выгрузка БТИ.xlsx'),
                         names=bti_cols,
                         index_col=None,
                         usecols=bti_use_cols,

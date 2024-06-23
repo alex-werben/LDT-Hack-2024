@@ -90,9 +90,9 @@ class PredictionListView(generics.ListAPIView):
             'flat_num': [instance.flat_num],
             'square': [instance.square]
         })
-        pickle_files = self.get_file_list(os.path.join(settings.BASE_DIR, 'coordinates/pickle'))
+        pickle_files = self.get_file_list(os.path.join(settings.BASE_DIR, 'coordinates', 'pickle'))
         for pickle_file in pickle_files:
-            with open(os.path.join(settings.BASE_DIR, f'coordinates/pickle/{pickle_file}'), 'rb') as file:
+            with open(os.path.join(settings.BASE_DIR, 'coordinates', 'pickle', pickle_file), 'rb') as file:
                 model = pickle.load(file)
                 predict = list(
                     model.predict_proba(df)[:, 1])
@@ -145,7 +145,7 @@ class PriorityListAPIView(APIView):
     @staticmethod
     def get_priority(unom_list):
         unom_list = [int(item) for item in unom_list]
-        df = pd.read_csv(os.path.join(settings.BASE_DIR, r"data\merged_priority_data.csv"))
+        df = pd.read_csv(os.path.join(settings.BASE_DIR, 'data',  'merged_priority_data.csv'))
         filtered_df = df[df['UNOM'].isin(unom_list)]
         unom_type_dict = dict(zip(filtered_df['UNOM'], filtered_df['Тип Назначение']))
         return [{'unom': k, 'priority': v} for k, v in unom_type_dict.items()]
