@@ -27,8 +27,8 @@ interface IYandexMapProps {
 
 export const YandexMap: FC<IYandexMapProps> = memo((props) => {
     const {
-        center = [37.779195221, 55.781199818],
-        zoom = 14.3,
+        center = [37.779195221, 55.796199818],
+        zoom = 14.9,
         data,
         onPolygonClick,
         onMarkerClick,
